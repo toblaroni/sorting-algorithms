@@ -1,2 +1,2 @@
 # sorting-algorithms
-Implementation of sorting algorithms on images in processing.
+Implementation of different sorting algorithms, based on pixel brightness in processing.
