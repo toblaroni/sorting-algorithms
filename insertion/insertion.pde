@@ -1,16 +1,19 @@
 PImage img;
 int n;
 void setup() {
-  img = loadImage("pumpkinface.jpg");
+  img = loadImage("wrinklecat.jpg");
   n = img.pixels.length;
-  size(600, 600);
+  size(453, 553);
 }
 
 void draw() {
+  println(img.width, img.height);
+  noLoop();
   int mx = mouseX ;
   int my = mouseY;
   img.loadPixels();
-  insertionPixelSort(img, 0, 0, mx, 257);
+  int w = 500;
+  insertionPixelSort(img, w, w, img.width - w * 2, img.height - w * 2);
   println(mx, my);
 
 
@@ -46,21 +49,23 @@ void convert1D(PImage img, color pixel2d[][]) {
  Takes in an array of colors and orders them by brightness.
  Takes the left and right index of the array to sort by.
  */
-void insertionPixelSort(PImage img, int tx, int ty, int bx, int by) {
+ 
+ // Change bx and by to width and height
+void insertionPixelSort(PImage img, int tx, int ty, int w, int h) {
   color Arr[][] = new color[img.width][img.height];
   
   // Convert the PImage pixel array to a 2d array.
   convert2D(img, Arr);
   
   // Sort the 2D array by row.
-  for (int y = ty; y < by; y++) {
-    for (int x = tx; x < bx; x++) {
+  for (int y = ty; y < ty + h; y++) {
+    for (int x = tx; x < tx + w; x++) {
 
 
       color tmp = Arr[x][y];
       int j = x - 1;
 
-      while (j >= tx && brightness(tmp) < brightness(Arr[j][y])) {
+      while (j >= tx && brightness(tmp) > brightness(Arr[j][y])) {
         Arr[j + 1][y] = Arr[j][y];
         j -= 1;
       }
