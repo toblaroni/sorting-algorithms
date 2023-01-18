@@ -1,11 +1,13 @@
-PImage img;
-int n;
+PImage img, imgCpy;
 int mx, my;
 
+String imgStr = "pumpkinface.jpg";
+
 void setup() {
-  img = loadImage("pumpkinface.jpg");
-  n = img.pixels.length;
-  size(257, 257);
+  img = loadImage(imgStr);
+  imgCpy = loadImage(imgStr);
+  //size(257, 257);
+  size(600, 600);
   pixelDensity(displayDensity());
   stroke(255);
   strokeWeight(1);
@@ -13,8 +15,8 @@ void setup() {
 }
 
 void draw() {
-  img.loadPixels();
-  img.updatePixels();
+  imgCpy.resize(width, height);
+  img.resize(width, height);
   image(img, 0, 0);
 
   // Draw a rectange
@@ -56,7 +58,8 @@ void convert1D(PImage img, color pixel2d[][]) {
 // Change bx and by to width and height
 void insertionPixelSort(PImage img, int tx, int ty, int w, int h) {
   color Arr[][] = new color[img.width + 1][img.height + 1];
-  println(w);
+
+  img.loadPixels();
   // Convert the PImage pixel array to a 2d array.
   convert2D(img, Arr);
 
@@ -75,18 +78,39 @@ void insertionPixelSort(PImage img, int tx, int ty, int w, int h) {
       Arr[j + 1][y] = tmp;
     }
   }
-  
+
   // Update the PImage's pixel array
   convert1D(img, Arr);
+  img.updatePixels();
 }
 
+// Loop while the mouse is being dragged
 void mouseDragged() {
   loop();
 }
 
+// Loop once when mouse is released
 void mouseReleased() {
   insertionPixelSort(img, mx, my, mouseX - mx, mouseY -my);
   loop();
+}
+
+// Press key to reset pixels
+void keyPressed() {
+  if (key == CODED && keyCode == DOWN) {
+    saveFrame("./images/output_###.jpg");
+  } else {
+    img.loadPixels();
+    imgCpy.loadPixels();
+    
+    for (int i = 0; i < img.pixels.length; i ++) {
+      img.pixels[i] = imgCpy.pixels[i];
+    }
+    
+    imgCpy.updatePixels();
+    img.updatePixels();
+    loop();
+  }
 }
 
 void mousePressed() {
